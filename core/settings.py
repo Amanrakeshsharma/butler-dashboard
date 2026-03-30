@@ -119,4 +119,7 @@ STATIC_URL = 'static/'
 import os
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'dashboard/static')
+DEBUG = os.getenv("DEBUG") == "True"
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 ]

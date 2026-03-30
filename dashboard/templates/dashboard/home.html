@@ -16,7 +16,11 @@
         object-fit: cover;
     }
 </style>
-<div onclick="redirectPage()">
+</head>
+
+<body>
+
+<div onclick="handleInteraction()">
     <video autoplay muted loop>
         <source src="{% static 'video/butler_video.mp4' %}" type="video/mp4">
     </video>
@@ -25,21 +29,41 @@
 <script>
     let entered = false;
 
-    function redirectPage() {
-        if (!entered) {
-            entered = true;
-            window.location.href = "/dashboard/";
+    function handleInteraction() {
+
+        // 🔒 Prevent multiple triggers
+        if (entered) return;
+        entered = true;
+
+        // 🎤 Speak ONLY first time ever
+        if (sessionStorage.getItem("butler_spoken") !== "true") {
+            const speech = new SpeechSynthesisUtterance("Welcome to Butler World");
+            speech.rate = 1;
+            speech.pitch = 1;
+            speech.volume = 1;
+
+            window.speechSynthesis.speak(speech);
+
+            sessionStorage.setItem("butler_spoken", "true");
         }
+
+        // 🚀 Redirect after slight delay (so voice starts)
+        setTimeout(() => {
+            window.location.href = "/dashboard/";
+        }, 1000);
     }
 
     // Keyboard
-    document.addEventListener("keydown", redirectPage);
+    document.addEventListener("keydown", handleInteraction);
 
-    // Mouse click (anywhere)
-    document.addEventListener("click", redirectPage);
+    // Mouse click
+    document.addEventListener("click", handleInteraction);
 
-    // 🔥 Fix: Reset when page is shown again (back button case)
+    // Reset only redirect flag (NOT speech memory)
     window.addEventListener("pageshow", function() {
         entered = false;
     });
 </script>
+
+</body>
+</html>

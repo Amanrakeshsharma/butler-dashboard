@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Butler Dashboard</title>
+    {% load static %}
+
+    <style>
+    body {
+        margin: 0;
+        overflow: hidden;
+    }
+
+    video {
+        width: 100%;
+        height: 100vh;
+        object-fit: cover;
+    }
+</style>
+<div onclick="redirectPage()">
+    <video autoplay muted loop>
+        <source src="{% static 'video/butler_video.mp4' %}" type="video/mp4">
+    </video>
+</div>
+
+<script>
+    let entered = false;
+
+    function redirectPage() {
+        if (!entered) {
+            entered = true;
+            window.location.href = "/dashboard/";
+        }
+    }
+
+    // Keyboard
+    document.addEventListener("keydown", redirectPage);
+
+    // Mouse click (anywhere)
+    document.addEventListener("click", redirectPage);
+
+    // 🔥 Fix: Reset when page is shown again (back button case)
+    window.addEventListener("pageshow", function() {
+        entered = false;
+    });
+</script>
